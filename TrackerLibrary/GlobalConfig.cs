@@ -8,13 +8,18 @@ namespace TrackerLibrary
 {
     public static class GlobalConfig
     {
-        // Creates and initializes an empty Connections list of IDataConnection types.
-        // private set - Only methods inside GlobalConfig class can change the values of Connections.
-        // public get - Any method can read the values of Connections.
+        /// <summary>
+        /// Creates and initializes an empty Connections list of IDataConnection types.
+        /// Private set - Only methods inside GlobalConfig class can change the values of Connections.
+        /// Public get - Any method can read the values of Connections.
+        /// </summary>
         public static List<IDataConnection> Connections { get; private set; } = new List<IDataConnection>();
 
-        //This method is called at startup.
-        //Chooses which places data can be saved to.
+        /// <summary>
+        /// Sets the databases where data can be saved to.
+        /// </summary>
+        /// <param name="database">SQL Server</param>
+        /// <param name="textFiles">Text File</param>
         public static void InitialzeConnections(bool database, bool textFiles)
         {
             if (database == true)
@@ -26,7 +31,7 @@ namespace TrackerLibrary
 
             if (textFiles == true)
             {
-                // TODO - create the text connection
+                // TODO - create the Text Connector
                 TextConnector text = new TextConnector();
                 Connections.Add(text);
             }

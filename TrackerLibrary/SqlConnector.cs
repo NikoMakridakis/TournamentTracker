@@ -6,14 +6,12 @@ using System.Threading.Tasks;
 
 namespace TrackerLibrary
 {
+    /// <summary>
+    /// Represents a SQL Connector which inherits the ability to create and save data from the IDataConnection interface.
+    /// </summary>
     public class SqlConnector : IDataConnection
     {
         //TODO - Make the CreatePrize method save to the database.
-        /// <summary>
-        /// Saves a new prize to the database.
-        /// </summary>
-        /// <param name="model">The prize information.</param>
-        /// <returns>The prize information, including the unique identifer.</returns>
         public PrizeModel CreatePrize(PrizeModel model)
         {
             model.Id = 1;
