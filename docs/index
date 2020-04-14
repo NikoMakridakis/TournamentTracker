@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <title>Docs</title>
+    <meta name="description" content="Tournament Tracker Documentation">
+    <meta name="author" content="Niko Makridakis">
+
+    <!-- Mobile Specific Metas
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    <!-- FONT
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic&display=swap" rel="stylesheet">
+  
+    <!-- CSS
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link rel="stylesheet" href="./static/normalize.css">
+    <link rel="stylesheet" href="./static/skeleton.css">
+    <link rel="stylesheet" href="./static/custom.css">
+</head>
+<body>
+    <div class="container">
+        <section class="header">
+            <h1>Tournament Tracker Documentation</h1>
+        </section>
+    </div>
+    
+    <div class="docs-section">
+        <div class="container">
+            <h3>Contents</h3>
+            <ul>
+                <li><a href="./Setup.html">Project Overview</a></li>
+                <li><a href="./ClassModelDiagram.html">Class Model Diagram</a></li>
+                <li><a href="./APISpecifications.html">API Specifications</a></li>
+            </ul>
+            <h3>Links</h3>
+            <ul>
+                <li><a href="https://github.com/NikoMakridakis/TournamentTracker">Github Repository</a></li>
+            </ul>
+
+        </div>
+    </div>
+
+
+</body>
+
+</html>
