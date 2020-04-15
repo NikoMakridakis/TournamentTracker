@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using TrackerLibrary;
+using TrackerLibrary.DataAccess;
+using TrackerLibrary.Models;
 
 namespace TrackerUI
 {
@@ -24,13 +26,13 @@ namespace TrackerUI
             {
                 //Creates new model object of type PrizeModel using the inputs from the CreatePrizeForm windows form.
                 //The constructor converts the string inputs to their respective data types and sets them to their respective properties.
-                PrizeModel model = new PrizeModel(placeNameValue.Text, placeNumberValue.Text, prizeAmountValue.Text, prizePercentageValue.Text);
+                PrizeModel model = new PrizeModel(
+                    placeNameValue.Text,
+                    placeNumberValue.Text,
+                    prizeAmountValue.Text,
+                    prizePercentageValue.Text);
 
-                //For each data connection type, the model is created on the database.
-                foreach (IDataConnection db in GlobalConfig.Connections)
-                {
-                    db.CreatePrize(model);
-                }
+                GlobalConfig.Connection.CreatePrize(model);
 
                 //If the form was valid, the input string values on the CreatePrizeForm windows form will be reset.
                 placeNameValue.Text = "";
