@@ -15,11 +15,13 @@ namespace TrackerLibrary.DataAccess
     /// </summary>
     public class SqlConnector : IDataConnection
     {
+        //name of database
+        private const string db = "Tournament";
         public PersonModel CreatePerson(PersonModel model)
         {
             //While using the database connection, saves Person
             //Closes the database connection when not in use.
-            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(GlobalConfig.CnnString("Tournament")))
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(GlobalConfig.CnnString(db)))
             {
                 //The values to be passed into the StoredProcedure dbo.spPeople_Insert
                 var p = new DynamicParameters();
@@ -43,7 +45,7 @@ namespace TrackerLibrary.DataAccess
         {
             //While using the database connection, saves Prize
             //Closes the database connection when not in use.
-            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(GlobalConfig.CnnString("Tournament")))
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(GlobalConfig.CnnString(db)))
             {
                 //The values to be passed into the StoredProcedure dbo.spPrizes_Insert
                 var p = new DynamicParameters();
@@ -62,6 +64,17 @@ namespace TrackerLibrary.DataAccess
                 return model;
             }
         }
-        
+
+        public List<PersonModel> GetPerson_All()
+        {
+            List<PersonModel> output;
+
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(GlobalConfig.CnnString(db)))
+            {
+                output = connection.Query<PersonModel>("dbo.spPeople_GetAll").ToList();
+            }
+
+            return output;
+        }
     }
 }
