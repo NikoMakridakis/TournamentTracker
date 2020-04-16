@@ -18,5 +18,7 @@ namespace TrackerLibrary.DataAccess
         /// <param name="model">The prize information.</param>
         /// <returns>The prize information.</returns>
         PrizeModel CreatePrize(PrizeModel model);
+
+        PersonModel CreatePerson(PersonModel model);
     }
 }

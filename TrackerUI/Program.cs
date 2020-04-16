@@ -21,8 +21,10 @@ namespace TrackerUI
             TrackerLibrary.GlobalConfig.InitialzeConnections(TrackerLibrary.DatabaseType.TextFile);
 
             //Launches CreatePrizeForm on startup.
-            Application.Run(new CreatePrizeForm());
+            //Application.Run(new CreatePrizeForm());
 
+            //Launches CreateTeamForm on startup.
+            Application.Run(new CreateTeamForm());
 
             //Startup form of application.
             //Application.Run(new TournamentDashboardForm());

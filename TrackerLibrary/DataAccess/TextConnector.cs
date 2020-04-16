@@ -15,6 +15,37 @@ namespace TrackerLibrary.DataAccess
     {
 
         private const string PrizesFile = "PrizeModels.csv";
+        
+        private const string PeopleFile = "PersonModels.csv";
+
+
+        /// <summary>
+        /// Saves a List of type PersonModel as the Text File "PersonModels.csv" at ...\TournamentTracker\TextData\PersonModels.csv
+        /// </summary>
+        /// <param name="model">model of type PersonModel</param>
+        /// <returns></returns>
+        public PersonModel CreatePerson(PersonModel model)
+        {
+            //Loads the text file and converts it to a list of type PersonModel
+            List<PersonModel> people = PeopleFile.FullFilePath().LoadFile().ConvertToPersonModels();
+
+            int currentId = 1;
+
+            //Finds the max Id and sets currentId to the max Id + 1
+            if (people.Count > 0)
+            {
+                currentId = people.OrderByDescending(x => x.Id).First().Id + 1;
+            }
+
+            model.Id = currentId;
+
+            //Add the new record with the new Id (max Id +1)
+            people.Add(model);
+
+            people.SaveToPeopleFile(PeopleFile);
+
+            return model;
+        }
 
         /// <summary>
         /// Saves a List of type PrizeModel as the Text File "PrizeModels.csv" at ...\TournamentTracker\TextData\PrizeModels.csv
