@@ -27,10 +27,14 @@ namespace TrackerLibrary.DataAccess
         /// <returns>The prize information.</returns>
         PersonModel CreatePerson(PersonModel model);
 
+        TeamModel CreateTeam(TeamModel model);
+
         /// <summary>
         /// Returns all of the stored People.
         /// </summary>
         /// <returns></returns>
         List<PersonModel> GetPerson_All();
+
+
     }
 }

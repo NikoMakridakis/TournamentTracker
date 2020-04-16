@@ -90,6 +90,34 @@ namespace TrackerLibrary.DataAccess.TextHelpers
         }
 
         /// <summary>
+        /// Creates a list of TeamModel from a list of string within a text file.
+        /// </summary>
+        /// <param name="lines">Represents all the lines within a text file.</param>
+        /// <returns></returns>
+        public static List<TeamModel> ConvertToTeamModels(this List<string> lines, string peopleFileName)
+        {
+            List<TeamModel> output = new List<TeamModel>();
+            List<PersonModel> people = peopleFileName.FullFilePath().LoadFile().ConvertToPersonModels();
+
+            foreach (string line in lines)
+            {
+                string[] cols = line.Split(',');
+
+                TeamModel t = new TeamModel();
+                t.Id = int.Parse(cols[0]);
+                t.TeamName = cols[1];
+
+                string[] personIds = cols[2].Split('|');
+
+                foreach (string id in personIds)
+                {
+                    t.TeamMembers.Add(people.Where(x => x.Id == int.Parse(id)).First());
+                }
+            }
+            return output;
+        }
+
+        /// <summary>
         /// Saves a new text file for each PrizeModel
         /// </summary>
         /// <param name="models">List of PrizeModel</param>
@@ -121,6 +149,50 @@ namespace TrackerLibrary.DataAccess.TextHelpers
             }
 
             File.WriteAllLines(fileName.FullFilePath(), lines);
+        }
+
+        /// <summary>
+        /// Saves a new team file for each TeamModel
+        /// </summary>
+        /// <param name="models">List of TeamModel</param>
+        /// <param name="fileName"></param>
+        public static void SaveToTeamFile(this List<TeamModel> models, string fileName)
+        {
+            List<string> lines = new List<string>();
+
+            foreach (TeamModel t in models)
+            {
+                lines.Add($"{t.Id},{t.TeamName},{ConvertPeopleListToString(t.TeamMembers)}");
+            }
+
+            File.WriteAllLines(fileName.FullFilePath(), lines);
+        }
+
+        /// <summary>
+        /// Converts List of PersonModel to string with each person seperated by '|'
+        /// </summary>
+        /// <param name="people">List of PersonModel</param>
+        /// <returns></returns>
+        private static string ConvertPeopleListToString(List<PersonModel> people)
+        {
+            //starts empty output string
+            string output = "";
+
+            if (people.Count == 0)
+            {
+                return "";
+            }
+            
+            //adds the Id of each PersonModel to the string, and seperates each with '|'
+            foreach (PersonModel p in people)
+            {
+                output += $"{p.Id}|";
+            }
+
+            //removes the last '|' from the end of the string
+            output = output.Substring(0, output.Length - 1);
+
+            return output;
         }
 
     }
