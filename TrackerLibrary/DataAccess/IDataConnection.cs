@@ -35,6 +35,13 @@ namespace TrackerLibrary.DataAccess
         TeamModel CreateTeam(TeamModel model);
 
         /// <summary>
+        /// Saves a new tournament to the data connection.
+        /// </summary>
+        /// <param name="model">The tournament information of type TournamentModel.</param>
+        /// <returns>The tournament information.</returns>
+        void CreateTournament(TournamentModel model);
+
+        /// <summary>
         /// Returns all of the stored people.
         /// </summary>
         /// <returns></returns>

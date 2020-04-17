@@ -120,5 +120,38 @@ namespace TrackerUI
             }
 
         }
+
+        private void createTournamentButton_Click(object sender, EventArgs e)
+        {
+            //Validate data
+            decimal fee = 0;
+            
+            //Tries to convert string entryFeeValue to decimal type. If success, returns fee with decimal value and bool true
+            bool feeAcceptable = decimal.TryParse(entryFeeValue.Text, out fee);
+
+            if (feeAcceptable == false)
+            {
+                MessageBox.Show("You need to enter a valid Entry Fee.",
+                    "Invalid Fee",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                return;
+            }
+
+            //Create our Tournament model
+            TournamentModel tm = new TournamentModel();
+            tm.TournamentName = tournamentNameValue.Text;
+            tm.EntryFee = fee;
+
+            tm.Prizes = selectedPrizes;
+            tm.EnteredTeams = selectedTeams;
+
+            //TODO - Wire our matchups
+
+            //Create Tournament entry
+            //Create all of the prizes entries
+            //Create all of the team entries
+            GlobalConfig.Connection.CreateTournament(tm);
+        }
     }
 }
