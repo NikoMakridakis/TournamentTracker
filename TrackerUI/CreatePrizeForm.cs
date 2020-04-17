@@ -15,9 +15,12 @@ namespace TrackerUI
 {
     public partial class CreatePrizeForm : Form
     {
-        public CreatePrizeForm()
+        IPrizeRequester callingForm;
+        public CreatePrizeForm(IPrizeRequester caller)
         {
             InitializeComponent();
+
+            callingForm = caller;
         }
 
         private void createPrizeButton_Click(object sender, EventArgs e)
@@ -34,11 +37,15 @@ namespace TrackerUI
 
                 GlobalConfig.Connection.CreatePrize(model);
 
+                callingForm.PrizeComplete(model);
+
+                this.Close();
+
                 //If the form was valid, the input string values on the CreatePrizeForm windows form will be reset.
-                placeNameValue.Text = "";
-                placeNumberValue.Text = "";
-                prizeAmountValue.Text = "0";
-                prizePercentageValue.Text = "0";
+                //placeNameValue.Text = "";
+                //placeNumberValue.Text = "";
+                //prizeAmountValue.Text = "0";
+                //prizePercentageValue.Text = "0";
             }
 
             //Displays simple error message box if the forms is invalid.
