@@ -89,7 +89,7 @@ namespace TrackerLibrary
 
         /// <summary>
         /// Adds number of byes depending on the number of teams and rounds.
-        /// The number of byes represents a placeholder team.
+        /// The number of byes represents a placeholder team for the first round.
         /// </summary>
         /// <param name="rounds">The number of rounds</param>
         /// <param name="numberOfTeams">The number of teams</param>
@@ -97,7 +97,7 @@ namespace TrackerLibrary
         private static int NumberOfByes(int rounds, int numberOfTeams)
         {
             int output = 0;
-            int totalTeams = 0;
+            int totalTeams = 1;
 
             for (int i = 1; i <= rounds; i++)
             {
