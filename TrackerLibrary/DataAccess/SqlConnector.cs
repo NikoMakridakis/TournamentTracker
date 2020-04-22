@@ -238,5 +238,29 @@ namespace TrackerLibrary.DataAccess
 
             return output;
         }
+
+        public List<TournamentModel> GetTournament_All()
+        {
+            List<TournamentModel> output;
+
+            using (IDbConnection connection = new System.Data.SqlClient.SqlConnection(GlobalConfig.CnnString(db)))
+            {
+                output = connection.Query<TournamentModel>("dbo.spTournaments_GetAll").ToList();
+
+                //Populate Prizes
+                foreach (TournamentModel t in output)
+                {
+                    t.Prizes = connection.Query<PrizeModel>("spPrizes_GetByTournament").ToList();
+                }
+
+                //Populate Teams
+
+
+                //Populate Rounds
+            
+            }
+
+            return output;
+        }
     }
 }

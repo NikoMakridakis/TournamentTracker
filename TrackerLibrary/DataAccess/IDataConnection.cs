@@ -53,6 +53,12 @@ namespace TrackerLibrary.DataAccess
         /// <returns></returns>
         List<TeamModel> GetTeam_All();
 
+        /// <summary>
+        /// Returns all of the stored tournaments.
+        /// </summary>
+        /// <returns></returns>
+        List<TournamentModel> GetTournament_All();
+
 
     }
 }
