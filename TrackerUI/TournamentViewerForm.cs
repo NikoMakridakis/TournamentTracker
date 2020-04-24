@@ -109,6 +109,11 @@ namespace TrackerUI
 
         private void LoadMatchup(MatchupModel m)
         {
+            if (m == null)
+            {
+                return;
+            }
+
             for (int i = 0; i < m.Entries.Count; i++)
             {
                 if (i == 0)
