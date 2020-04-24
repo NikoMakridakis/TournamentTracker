@@ -95,5 +95,10 @@ namespace TrackerUI
 
             return output;
         }
+
+        private void orLabel_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
