@@ -37,8 +37,15 @@ namespace TrackerLibrary.DataAccess
         /// Saves a new tournament to the data connection.
         /// </summary>
         /// <param name="model">The tournament information of type TournamentModel.</param>
-        /// <returns>The tournament information.</returns>
+        /// <returns></returns>
         void CreateTournament(TournamentModel model);
+
+        /// <summary>
+        /// Saves a new matchup to the data connection.
+        /// </summary>
+        /// <param name="model">The matchup information of type MatchupModel.</param>
+        /// <returns></returns>
+        void UpdateMatchup(MatchupModel model);
 
         /// <summary>
         /// Returns all of the stored teams.
