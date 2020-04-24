@@ -9,6 +9,11 @@ namespace TrackerLibrary
 {
     public static class TournamentLogic
     {
+        // Order our list randomly of teams
+        // Check if it is big enough - if not, add in byes - 2*2*2*2 - 2^4
+        // Create our first round of matchups
+        // Create every round after that - 8 matchups - 4 matchups - 2 matchups - 1 matchup
+
         public static void CreateRounds(TournamentModel model)
         {
             List<TeamModel> randomizedTeams = RandomizeTeamOrder(model.EnteredTeams);
@@ -18,14 +23,8 @@ namespace TrackerLibrary
             model.Rounds.Add(CreateFirstRound(byes, randomizedTeams));
 
             CreateOtherRounds(model, rounds);
-
         }
 
-        /// <summary>
-        /// Creates all of the rounds, excluding the first round.
-        /// </summary>
-        /// <param name="model">The model of type TournamentModel</param>
-        /// <param name="rounds">The number of rounds</param>
         private static void CreateOtherRounds(TournamentModel model, int rounds)
         {
             int round = 2;
@@ -38,7 +37,7 @@ namespace TrackerLibrary
                 foreach (MatchupModel match in previousRound)
                 {
                     currMatchup.Entries.Add(new MatchupEntryModel { ParentMatchup = match });
-                
+
                     if (currMatchup.Entries.Count > 1)
                     {
                         currMatchup.MatchupRound = round;
@@ -52,16 +51,9 @@ namespace TrackerLibrary
 
                 currRound = new List<MatchupModel>();
                 round += 1;
-
             }
         }
 
-        /// <summary>
-        /// Creates a list of MatchupModel for the first round.
-        /// </summary>
-        /// <param name="byes">The number of byes, or placeholder teams</param>
-        /// <param name="teams">The number of teams</param>
-        /// <returns></returns>
         private static List<MatchupModel> CreateFirstRound(int byes, List<TeamModel> teams)
         {
             List<MatchupModel> output = new List<MatchupModel>();
@@ -87,13 +79,6 @@ namespace TrackerLibrary
             return output;
         }
 
-        /// <summary>
-        /// Adds number of byes depending on the number of teams and rounds.
-        /// The number of byes represents a placeholder team for the first round.
-        /// </summary>
-        /// <param name="rounds">The number of rounds</param>
-        /// <param name="numberOfTeams">The number of teams</param>
-        /// <returns></returns>
         private static int NumberOfByes(int rounds, int numberOfTeams)
         {
             int output = 0;
@@ -109,11 +94,6 @@ namespace TrackerLibrary
             return output;
         }
 
-        /// <summary>
-        /// Finds the number of rounds to be played from the total team count.
-        /// </summary>
-        /// <param name="teamCount">The number of competing teams</param>
-        /// <returns>The number of rounds to be played</returns>
         private static int FindNumberOfRounds(int teamCount)
         {
             int output = 1;
@@ -121,23 +101,20 @@ namespace TrackerLibrary
 
             while (val < teamCount)
             {
+                // output = output + 1;
                 output += 1;
+
+                // val = val * 2;
                 val *= 2;
             }
 
             return output;
         }
 
-        /// <summary>
-        /// Randomizes the order of the teams.
-        /// </summary>
-        /// <param name="teams">List of teams of type TeamModel</param>
-        /// <returns>Random list of teams of type TeamModel</returns>
         private static List<TeamModel> RandomizeTeamOrder(List<TeamModel> teams)
         {
-            //randomizes list by using Guid
+            // cards.OrderBy(a => Guid.NewGuid()).ToList();
             return teams.OrderBy(x => Guid.NewGuid()).ToList();
         }
-
     }
 }

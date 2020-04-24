@@ -8,12 +8,8 @@ using TrackerLibrary.DataAccess.TextHelpers;
 
 namespace TrackerLibrary.DataAccess
 {
-    /// <summary>
-    /// Represents a Text Connector which inherits the ability to create and save data from the IDataConnection interface.
-    /// </summary>
     public class TextConnector : IDataConnection
     {
-
         private const string PrizesFile = "PrizeModels.csv";
         private const string PeopleFile = "PersonModels.csv";
         private const string TeamFile = "TeamModels.csv";
@@ -21,20 +17,12 @@ namespace TrackerLibrary.DataAccess
         private const string MatchupFile = "MatchupModels.csv";
         private const string MatchupEntryFile = "MatchupEntryModels.csv";
 
-
-        /// <summary>
-        /// Saves a List of type PersonModel as the Text File "PersonModels.csv" at ...\TournamentTracker\TextData\PersonModels.csv
-        /// </summary>
-        /// <param name="model">model of type PersonModel</param>
-        /// <returns></returns>
         public PersonModel CreatePerson(PersonModel model)
         {
-            //Loads the text file and converts it to a list of type PersonModel
             List<PersonModel> people = PeopleFile.FullFilePath().LoadFile().ConvertToPersonModels();
 
             int currentId = 1;
 
-            //Finds the max Id and sets currentId to the max Id + 1
             if (people.Count > 0)
             {
                 currentId = people.OrderByDescending(x => x.Id).First().Id + 1;
@@ -42,7 +30,6 @@ namespace TrackerLibrary.DataAccess
 
             model.Id = currentId;
 
-            //Add the new record with the new Id (max Id +1)
             people.Add(model);
 
             people.SaveToPeopleFile(PeopleFile);
@@ -50,28 +37,27 @@ namespace TrackerLibrary.DataAccess
             return model;
         }
 
-        /// <summary>
-        /// Saves a List of type PrizeModel as the Text File "PrizeModels.csv" at ...\TournamentTracker\TextData\PrizeModels.csv
-        /// </summary>
-        /// <param name="model">model of type PrizeModel</param>
-        /// <returns></returns>
+        // TODO - Wire up the CreatePrize for text files.
         public PrizeModel CreatePrize(PrizeModel model)
         {
-            //Loads the text file and converts it to a list of type PrizeModel
+            // Load the text file and convert the text to List<PrizeModel>
             List<PrizeModel> prizes = PrizesFile.FullFilePath().LoadFile().ConvertToPrizeModels();
 
+            // Find the max ID
             int currentId = 1;
 
-            //Finds the max Id and sets currentId to the max Id + 1
             if (prizes.Count > 0)
             {
                 currentId = prizes.OrderByDescending(x => x.Id).First().Id + 1;
             }
+
             model.Id = currentId;
 
-            //Add the new record with the new Id (max Id +1)
+            // Add the new record with the new ID (max + 1)
             prizes.Add(model);
 
+            // Convert the prizes to list<string>
+            // Save the list<string> to the text file
             prizes.SaveToPrizeFile(PrizesFile);
 
             return model;
@@ -86,26 +72,26 @@ namespace TrackerLibrary.DataAccess
         {
             List<TeamModel> teams = TeamFile.FullFilePath().LoadFile().ConvertToTeamModels(PeopleFile);
 
+            // Find the max ID
             int currentId = 1;
 
-            //Finds the max Id and sets currentId to the max Id + 1
             if (teams.Count > 0)
             {
                 currentId = teams.OrderByDescending(x => x.Id).First().Id + 1;
             }
+
             model.Id = currentId;
 
             teams.Add(model);
 
             teams.SaveToTeamFile(TeamFile);
-            
+
             return model;
         }
 
         public List<TeamModel> GetTeam_All()
         {
             return TeamFile.FullFilePath().LoadFile().ConvertToTeamModels(PeopleFile);
-
         }
 
         public void CreateTournament(TournamentModel model)
@@ -114,10 +100,9 @@ namespace TrackerLibrary.DataAccess
                 .FullFilePath()
                 .LoadFile()
                 .ConvertToTournamentModels(TeamFile, PeopleFile, PrizesFile);
-            
+
             int currentId = 1;
 
-            //Finds the max Id and sets currentId to the max Id + 1
             if (tournaments.Count > 0)
             {
                 currentId = tournaments.OrderByDescending(x => x.Id).First().Id + 1;

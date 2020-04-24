@@ -7,35 +7,38 @@ using System.Threading.Tasks;
 namespace TrackerLibrary.Models
 {
     /// <summary>
-    /// Represents one tournament.
+    /// Represents one tournament, with all of the rounds, matchups, prizes and outcomes.
     /// </summary>
     public class TournamentModel
     {
         /// <summary>
-        /// Represents the unique identifier of the tournament.
+        /// The unique identifier for the tournament.
         /// </summary>
         public int Id { get; set; }
 
         /// <summary>
-        /// Represents the tournament name.
+        /// The name given to this tournament.
         /// </summary>
         public string TournamentName { get; set; }
+
         /// <summary>
-        /// Represents the entry fee of the tournament.
+        /// The amount of money each team needs to put up to enter.
         /// </summary>
         public decimal EntryFee { get; set; }
+
         /// <summary>
-        /// Represents the set of teams entered in the tournament.
+        /// The set of teams that have been entered.
         /// </summary>
-        public List<TeamModel> EnteredTeams { get; set; }
+        public List<TeamModel> EnteredTeams { get; set; } = new List<TeamModel>();
+
         /// <summary>
-        /// Represents the set of prizes in the tournament.
+        /// The list of prizes for the various places.
         /// </summary>
         public List<PrizeModel> Prizes { get; set; } = new List<PrizeModel>();
+
         /// <summary>
-        /// Represents the set of matchups.
+        /// The matchups per round.
         /// </summary>
         public List<List<MatchupModel>> Rounds { get; set; } = new List<List<MatchupModel>>();
-
     }
 }

@@ -14,7 +14,6 @@ namespace TrackerUI
 {
     public partial class CreateTeamForm : Form
     {
-
         private List<PersonModel> availableTeamMembers = GlobalConfig.Connection.GetPerson_All();
         private List<PersonModel> selectedTeamMembers = new List<PersonModel>();
         private ITeamRequester callingForm;
@@ -32,11 +31,11 @@ namespace TrackerUI
 
         private void CreateSampleData()
         {
-            availableTeamMembers.Add(new PersonModel { FirstName = "Richard", LastName = "Corey" });
-            availableTeamMembers.Add(new PersonModel { FirstName = "Bob", LastName = "Miller" });
+            availableTeamMembers.Add(new PersonModel { FirstName = "Tim", LastName = "Corey" });
+            availableTeamMembers.Add(new PersonModel { FirstName = "Sue", LastName = "Storm" });
 
             selectedTeamMembers.Add(new PersonModel { FirstName = "Jane", LastName = "Smith" });
-            selectedTeamMembers.Add(new PersonModel { FirstName = "Sue", LastName = "Jones" });
+            selectedTeamMembers.Add(new PersonModel { FirstName = "Bill", LastName = "Jones" });
         }
 
         private void WireUpLists()
@@ -51,18 +50,19 @@ namespace TrackerUI
             teamMembersListBox.DataSource = selectedTeamMembers;
             teamMembersListBox.DisplayMember = "FullName";
 
+
         }
 
         private void createMemberButton_Click(object sender, EventArgs e)
         {
-            if (ValidateForm() == true)
+            if (ValidateForm())
             {
                 PersonModel p = new PersonModel();
 
                 p.FirstName = firstNameValue.Text;
                 p.LastName = lastNameValue.Text;
                 p.EmailAddress = emailValue.Text;
-                p.CellPhoneNumber = cellphoneValue.Text;
+                p.CellphoneNumber = cellphoneValue.Text;
 
                 p = GlobalConfig.Connection.CreatePerson(p);
 
@@ -75,12 +75,10 @@ namespace TrackerUI
                 emailValue.Text = "";
                 cellphoneValue.Text = "";
             }
-
             else
             {
                 MessageBox.Show("You need to fill in all of the fields.");
             }
-
         }
 
         private bool ValidateForm()
@@ -89,62 +87,51 @@ namespace TrackerUI
             {
                 return false;
             }
-            return true;
 
             if (lastNameValue.Text.Length == 0)
             {
                 return false;
             }
-            return true;
 
             if (emailValue.Text.Length == 0)
             {
                 return false;
             }
-            return true;
 
             if (cellphoneValue.Text.Length == 0)
             {
                 return false;
             }
+
             return true;
         }
 
-        private void addTeamMemberButton_Click(object sender, EventArgs e)
+        private void addMemberButton_Click(object sender, EventArgs e)
         {
-            //Find person from the list of available people
             PersonModel p = (PersonModel)selectTeamMemberDropDown.SelectedItem;
 
             if (p != null)
             {
-                //Remove person from the list of available people
                 availableTeamMembers.Remove(p);
-
-                //Add person to the list of selected people
                 selectedTeamMembers.Add(p);
 
-                //Refreshes list
                 WireUpLists();
             }
         }
 
-        private void removeSelectedMember_Click(object sender, EventArgs e)
+        private void removeSelectedMemberButton_Click(object sender, EventArgs e)
         {
-            //Find person from the list of selected people
             PersonModel p = (PersonModel)teamMembersListBox.SelectedItem;
 
             if (p != null)
             {
-                //Remove person from the list of selected people
                 selectedTeamMembers.Remove(p);
-
-                //Add person to the list of available people
                 availableTeamMembers.Add(p);
 
-                //Refreshes list
                 WireUpLists();
             }
         }
+
         private void createTeamButton_Click(object sender, EventArgs e)
         {
             TeamModel t = new TeamModel();
@@ -157,8 +144,6 @@ namespace TrackerUI
             callingForm.TeamComplete(t);
 
             this.Close();
-
-
         }
     }
 }

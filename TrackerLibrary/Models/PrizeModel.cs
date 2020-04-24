@@ -7,32 +7,34 @@ using System.Threading.Tasks;
 namespace TrackerLibrary.Models
 {
     /// <summary>
-    /// Represents one prize.
+    /// Represents what the prize is for the given place.
     /// </summary>
     public class PrizeModel
     {
         /// <summary>
-        /// Represents the unique identifier of the prize.
+        /// The unique identifier for the prize.
         /// </summary>
         public int Id { get; set; }
 
         /// <summary>
-        /// Represents the place number of the prize.
+        /// The numeric identifier for the place (2 for second place, etc.)
         /// </summary>
         public int PlaceNumber { get; set; }
 
         /// <summary>
-        /// Represents the place name of the prize.
+        /// The friendly name for the place (second place, first runner up, etc.)
         /// </summary>
         public string PlaceName { get; set; }
 
         /// <summary>
-        /// Represents the prize amount.
+        /// The fixed amount this place earns or zero if it is not used.
         /// </summary>
         public decimal PrizeAmount { get; set; }
 
         /// <summary>
-        /// Represents the prize percentage.
+        /// The number that represents the percentage of the overall take or
+        /// zero if it is not used. The percentage is a fraction of 1 (so 0.5 for
+        /// 50%).
         /// </summary>
         public double PrizePercentage { get; set; }
 
@@ -41,27 +43,18 @@ namespace TrackerLibrary.Models
 
         }
 
-        //This constructor will convert the input strings from the Create Prize windows form to their correct data types.
-        //It will take the converted data values and set them to their respective properties.
         public PrizeModel(string placeName, string placeNumber, string prizeAmount, string prizePercentage)
         {
-            //The placeName string from the Create Prize form is set to the PlaceName property
             PlaceName = placeName;
 
-            //Tries to convert the input string placeNumber to int placeNumberValue.
-            //If successs, sets the converted int placeNumberValue to the PlaceNumber property.
             int placeNumberValue = 0;
             int.TryParse(placeNumber, out placeNumberValue);
             PlaceNumber = placeNumberValue;
 
-            //Tries to convert the input string prizeAmount to decimal prizeAmountValue.
-            //If successs, sets the converted decimal prizeAmountValue to the PrizeAmount property.
             decimal prizeAmountValue = 0;
             decimal.TryParse(prizeAmount, out prizeAmountValue);
             PrizeAmount = prizeAmountValue;
 
-            //Tries to convert the input string prizePercentage to double prizePercentageValue.
-            //If successs, sets the converted double prizePercentageValue to the PrizePercentage property.
             double prizePercentageValue = 0;
             double.TryParse(prizePercentage, out prizePercentageValue);
             PrizePercentage = prizePercentageValue;

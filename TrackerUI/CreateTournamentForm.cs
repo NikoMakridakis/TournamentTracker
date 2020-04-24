@@ -34,7 +34,7 @@ namespace TrackerUI
             tournamentTeamsListBox.DataSource = null;
             tournamentTeamsListBox.DataSource = selectedTeams;
             tournamentTeamsListBox.DisplayMember = "TeamName";
-            
+
             prizesListBox.DataSource = null;
             prizesListBox.DataSource = selectedPrizes;
             prizesListBox.DisplayMember = "PlaceName";
@@ -42,36 +42,30 @@ namespace TrackerUI
 
         private void addTeamButton_Click(object sender, EventArgs e)
         {
-            //Find team from the list of available teams
             TeamModel t = (TeamModel)selectTeamDropDown.SelectedItem;
 
             if (t != null)
             {
-                //Remove team from the list of available teams
                 availableTeams.Remove(t);
-
-                //Add team to the list of selected teams
                 selectedTeams.Add(t);
 
-                //Refreshes list
                 WireUpLists();
             }
         }
 
         private void createPrizeButton_Click(object sender, EventArgs e)
         {
-            //Call the CreatePrizeForm
+            // Call the CreatePrizeForm
             CreatePrizeForm frm = new CreatePrizeForm(this);
             frm.Show();
         }
 
         public void PrizeComplete(PrizeModel model)
         {
-            //Get back from the form a PrizeModel
-            //Take the PrizeModel and put it into our list of selected prizes.
+            // Get back from the form a PrizeModel
+            // Take the PrizeModel and put it into our list of selected prizes
             selectedPrizes.Add(model);
             WireUpLists();
-
         }
 
         public void TeamComplete(TeamModel model)
@@ -88,48 +82,37 @@ namespace TrackerUI
 
         private void removeSelectedPlayerButton_Click(object sender, EventArgs e)
         {
-            //Find team from the list of selected teams
             TeamModel t = (TeamModel)tournamentTeamsListBox.SelectedItem;
 
             if (t != null)
             {
-                //Remove team from the list of selected teams
                 selectedTeams.Remove(t);
-
-                //Add team to the list of available teams
                 availableTeams.Add(t);
 
-                //Refreshes list
                 WireUpLists();
             }
-
         }
 
         private void removeSelectedPrizeButton_Click(object sender, EventArgs e)
         {
-            //Find prize from the list of selected prizes
             PrizeModel p = (PrizeModel)prizesListBox.SelectedItem;
 
             if (p != null)
             {
-                //Deletes prize from the list of selected prizes
                 selectedPrizes.Remove(p);
-                
-                //Refreshes list
+
                 WireUpLists();
             }
-
         }
 
         private void createTournamentButton_Click(object sender, EventArgs e)
         {
-            //Validate data
+            // Validate data
             decimal fee = 0;
-            
-            //Tries to convert string entryFeeValue to decimal type. If success, returns fee with decimal value and bool true
+
             bool feeAcceptable = decimal.TryParse(entryFeeValue.Text, out fee);
 
-            if (feeAcceptable == false)
+            if (!feeAcceptable)
             {
                 MessageBox.Show("You need to enter a valid Entry Fee.",
                     "Invalid Fee",
@@ -138,20 +121,21 @@ namespace TrackerUI
                 return;
             }
 
-            //Create our Tournament model
+            // Create our tournament model
             TournamentModel tm = new TournamentModel();
+
             tm.TournamentName = tournamentNameValue.Text;
             tm.EntryFee = fee;
 
             tm.Prizes = selectedPrizes;
             tm.EnteredTeams = selectedTeams;
 
-            //TODO - Wire our matchups
+            // Wire our matchups
             TournamentLogic.CreateRounds(tm);
 
-            //Create Tournament entry
-            //Create all of the prizes entries
-            //Create all of the team entries
+            // Create Tournament entry
+            // Create all of the prizes entries
+            // Create all of team entries
             GlobalConfig.Connection.CreateTournament(tm);
         }
     }

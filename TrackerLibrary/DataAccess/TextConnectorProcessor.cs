@@ -11,24 +11,14 @@ namespace TrackerLibrary.DataAccess.TextHelpers
 {
     public static class TextConnectorProcessor
     {
-        /// <summary>
-        /// Creates the file path: ...\TournamentTracker\TextData\PrizeModels.csv
-        /// </summary>
-        /// <param name="fileName">Name of the .csv text file</param>
-        /// <returns>The complete file path: ...\TournamentTracker\TextData\PrizeModels.csv</returns>
         public static string FullFilePath(this string fileName)
         {
-            return $"{ConfigurationManager.AppSettings["filePath"]}\\{fileName}";
+            return $"{ ConfigurationManager.AppSettings["filePath"] }\\{ fileName }";
         }
 
-        /// <summary>
-        /// Creates a list of string representing all of the lines within a text file.
-        /// </summary>
-        /// <param name="file">Complete file path: ...\TournamentTracker\TextData\PrizeModels.csv</param>
-        /// <returns>Represents all the lines within a text file. </returns>
         public static List<string> LoadFile(this string file)
         {
-            if (File.Exists(file) == false)
+            if (!File.Exists(file))
             {
                 return new List<string>();
             }
@@ -36,18 +26,12 @@ namespace TrackerLibrary.DataAccess.TextHelpers
             return File.ReadAllLines(file).ToList();
         }
 
-        /// <summary>
-        /// Creates a list of PrizeModel from a list of string within a text file.
-        /// </summary>
-        /// <param name="lines">Represents all the lines within a text file.</param>
-        /// <returns>List of PrizeModel</returns>
         public static List<PrizeModel> ConvertToPrizeModels(this List<string> lines)
         {
             List<PrizeModel> output = new List<PrizeModel>();
 
             foreach (string line in lines)
             {
-                //Splits the lines with a comma ','.
                 string[] cols = line.Split(',');
 
                 PrizeModel p = new PrizeModel();
@@ -58,23 +42,16 @@ namespace TrackerLibrary.DataAccess.TextHelpers
                 p.PrizePercentage = double.Parse(cols[4]);
                 output.Add(p);
             }
-            
+
             return output;
         }
 
-        /// <summary>
-        /// Creates a list of PersonModel from a list of string within a text file.
-        /// </summary>
-        /// <param name="lines">Represents all the lines within a text file.</param>
-        /// <returns>List of PersonModel</returns>
         public static List<PersonModel> ConvertToPersonModels(this List<string> lines)
         {
             List<PersonModel> output = new List<PersonModel>();
 
-            foreach(string line in lines)
+            foreach (string line in lines)
             {
-
-                //Splits the lines with a comma ','.
                 string[] cols = line.Split(',');
 
                 PersonModel p = new PersonModel();
@@ -82,20 +59,17 @@ namespace TrackerLibrary.DataAccess.TextHelpers
                 p.FirstName = cols[1];
                 p.LastName = cols[2];
                 p.EmailAddress = cols[3];
-                p.CellPhoneNumber = cols[4];
+                p.CellphoneNumber = cols[4];
                 output.Add(p);
             }
 
             return output;
         }
 
-        /// <summary>
-        /// Creates a list of TeamModel from a list of string within a text file.
-        /// </summary>
-        /// <param name="lines">Represents all the lines within a text file.</param>
-        /// <returns></returns>
         public static List<TeamModel> ConvertToTeamModels(this List<string> lines, string peopleFileName)
         {
+            //id,team name,list of ids separated by the pipe
+            //3,Tim's Team,1|3|5
             List<TeamModel> output = new List<TeamModel>();
             List<PersonModel> people = peopleFileName.FullFilePath().LoadFile().ConvertToPersonModels();
 
@@ -120,18 +94,19 @@ namespace TrackerLibrary.DataAccess.TextHelpers
             return output;
         }
 
-        /// <summary>
-        /// Creates a list of TournamentModel from a list of string within a text file.
-        /// </summary>
-        /// <param name="lines">Represents all the lines within a text file.</param>
-        /// <returns></returns>
         public static List<TournamentModel> ConvertToTournamentModels(
             this List<string> lines,
             string teamFileName,
             string peopleFileName,
             string prizeFileName)
         {
-            //Id,TournamentName,EntryFee,(id|id|id|id - Entered Teams), (id|id|id|id - Prizes), (Rounds - list within list - id^id^id|id^id^id|id^id^id)
+            // id = 0
+            // TournamentName = 1
+            // EntryFee = 2
+            // EnteredTeams = 3
+            // Prizes = 4
+            // Rounds = 5
+            //id,TournamentName,EntryFee,(id|id|id - Entered Teams), (id|id|id - Prizes), (Rounds - id^id^id|id^id^id|id^id^id)
             List<TournamentModel> output = new List<TournamentModel>();
             List<TeamModel> teams = teamFileName.FullFilePath().LoadFile().ConvertToTeamModels(peopleFileName);
             List<PrizeModel> prizes = prizeFileName.FullFilePath().LoadFile().ConvertToPrizeModels();
@@ -163,9 +138,9 @@ namespace TrackerLibrary.DataAccess.TextHelpers
                     }
                 }
 
-
-                //Capture rounds information
+                // Capture Rounds information
                 string[] rounds = cols[5].Split('|');
+
 
                 foreach (string round in rounds)
                 {
@@ -176,6 +151,7 @@ namespace TrackerLibrary.DataAccess.TextHelpers
                     {
                         ms.Add(matchups.Where(x => x.Id == int.Parse(matchupModelTextId)).First());
                     }
+
                     tm.Rounds.Add(ms);
                 }
 
@@ -185,72 +161,57 @@ namespace TrackerLibrary.DataAccess.TextHelpers
             return output;
         }
 
-        /// <summary>
-        /// Saves a new text file for each PrizeModel
-        /// </summary>
-        /// <param name="models">List of PrizeModel</param>
-        /// <param name="fileName"></param>
-        public static void SaveToPrizeFile(this List<PrizeModel>models, string fileName)
+        public static void SaveToPrizeFile(this List<PrizeModel> models, string fileName)
         {
             List<string> lines = new List<string>();
 
             foreach (PrizeModel p in models)
             {
-                lines.Add($"{p.Id},{p.PlaceNumber},{p.PlaceName},{p.PrizeAmount},{p.PrizePercentage}");
+                lines.Add($"{ p.Id },{ p.PlaceNumber },{ p.PlaceName },{ p.PrizeAmount },{ p.PrizePercentage }");
             }
 
             File.WriteAllLines(fileName.FullFilePath(), lines);
         }
 
-        /// <summary>
-        /// Saves a new text file for each PersonModel
-        /// </summary>
-        /// <param name="models">List of PersonModel</param>
-        /// <param name="fileName"></param>
-        public static void SaveToPeopleFile(this List<PersonModel>models, string fileName)
+        public static void SaveToPeopleFile(this List<PersonModel> models, string fileName)
         {
             List<string> lines = new List<string>();
 
             foreach (PersonModel p in models)
             {
-                lines.Add($"{p.Id},{p.FirstName},{p.LastName},{p.EmailAddress},{p.CellPhoneNumber}");
+                lines.Add($"{ p.Id },{ p.FirstName },{ p.LastName },{ p.EmailAddress },{ p.CellphoneNumber }");
             }
 
             File.WriteAllLines(fileName.FullFilePath(), lines);
         }
 
-        /// <summary>
-        /// Saves a new team file for each TeamModel
-        /// </summary>
-        /// <param name="models">List of TeamModel</param>
-        /// <param name="fileName"></param>
         public static void SaveToTeamFile(this List<TeamModel> models, string fileName)
         {
             List<string> lines = new List<string>();
 
             foreach (TeamModel t in models)
             {
-                lines.Add($"{t.Id},{t.TeamName},{ConvertPeopleListToString(t.TeamMembers)}");
+                lines.Add($"{ t.Id },{ t.TeamName },{ ConvertPeopleListToString(t.TeamMembers) }");
             }
 
             File.WriteAllLines(fileName.FullFilePath(), lines);
         }
 
-        /// <summary>
-        /// Saves a new round file for each TournamentModel
-        /// </summary>
-        /// <param name="model"></param>
-        /// <param name="MatchupFile"></param>
-        /// <param name="MatchupEntryFile"></param>
         public static void SaveRoundsToFile(this TournamentModel model, string matchupFile, string matchupEntryFile)
         {
-            //Loop through each round
+            // Loop through each Round
+            // Loop through each Matchup
+            // Get the id for the new matchup and save the record
+            // Loop through each Entry, get the id, and save it
+
             foreach (List<MatchupModel> round in model.Rounds)
             {
-                //Loop through each matchup
                 foreach (MatchupModel matchup in round)
                 {
-                    //Save the matchup record to the file
+                    // Load all of the matchups from file
+                    // Get the top id and add one
+                    // Store the id
+                    // Save the matchup record
                     matchup.SaveMatchupToFile(matchupFile, matchupEntryFile);
                 }
             }
@@ -258,9 +219,9 @@ namespace TrackerLibrary.DataAccess.TextHelpers
 
         public static List<MatchupEntryModel> ConvertToMatchupEntryModels(this List<string> lines)
         {
-            //column layout in text file: id = 0, TeamCompeting = 1, Score = 2, ParentMatchup = 3
+            // id = 0, TeamCompeting = 1, Score = 2, ParentMatchup = 3
             List<MatchupEntryModel> output = new List<MatchupEntryModel>();
-            
+
             foreach (string line in lines)
             {
                 string[] cols = line.Split(',');
@@ -283,7 +244,6 @@ namespace TrackerLibrary.DataAccess.TextHelpers
                 {
                     me.ParentMatchup = LookupMatchupById(parentId);
                 }
-
                 else
                 {
                     me.ParentMatchup = null;
@@ -341,7 +301,7 @@ namespace TrackerLibrary.DataAccess.TextHelpers
         private static MatchupModel LookupMatchupById(int id)
         {
             List<string> matchups = GlobalConfig.MatchupFile.FullFilePath().LoadFile();
-            
+
             foreach (string matchup in matchups)
             {
                 string[] cols = matchup.Split(',');
@@ -358,10 +318,10 @@ namespace TrackerLibrary.DataAccess.TextHelpers
 
         public static List<MatchupModel> ConvertToMatchupModels(this List<string> lines)
         {
-            //column layout in text file: id = 0,entries = 1|2|3, winner = 2, matchupRound = 3
+            //id=0,entries=1(pipe delimited by id), winner=2, matchupRound=3
             List<MatchupModel> output = new List<MatchupModel>();
 
-            foreach(string line in lines)
+            foreach (string line in lines)
             {
                 string[] cols = line.Split(',');
 
@@ -376,6 +336,7 @@ namespace TrackerLibrary.DataAccess.TextHelpers
                 {
                     p.Winner = LookupTeamById(int.Parse(cols[2]));
                 }
+
                 p.MatchupRound = int.Parse(cols[3]);
                 output.Add(p);
             }
@@ -389,7 +350,7 @@ namespace TrackerLibrary.DataAccess.TextHelpers
 
             int currentId = 1;
 
-            if(matchups.Count > 0)
+            if (matchups.Count > 0)
             {
                 currentId = matchups.OrderByDescending(x => x.Id).First().Id + 1;
             }
@@ -398,16 +359,15 @@ namespace TrackerLibrary.DataAccess.TextHelpers
 
             matchups.Add(matchup);
 
-            //Save the matchup entry record to the file
             foreach (MatchupEntryModel entry in matchup.Entries)
             {
                 entry.SaveEntryToFile(matchupEntryFile);
             }
 
-            //save to file
+            // save to file
             List<string> lines = new List<string>();
 
-            //column layout in text file: id = 0,entries = 1|2|3, winner = 2, matchupRound = 3
+            //id=0,entries=1(pipe delimited by id), winner=2, matchupRound=3
             foreach (MatchupModel m in matchups)
             {
                 string winner = "";
@@ -415,7 +375,6 @@ namespace TrackerLibrary.DataAccess.TextHelpers
                 {
                     winner = m.Winner.Id.ToString();
                 }
-
                 lines.Add($"{ m.Id },{ ConvertMatchupEntryListToString(m.Entries) },{ winner },{ m.MatchupRound }");
             }
 
@@ -438,7 +397,7 @@ namespace TrackerLibrary.DataAccess.TextHelpers
 
             List<string> lines = new List<string>();
 
-            //column layout in text file: id = 0, TeamCompeting = 1, Score = 2, ParentMatchup = 3
+            // id = 0, TeamCompeting = 1, Score = 2, ParentMatchup = 3
             foreach (MatchupEntryModel e in entries)
             {
                 string parent = "";
@@ -457,32 +416,21 @@ namespace TrackerLibrary.DataAccess.TextHelpers
             File.WriteAllLines(GlobalConfig.MatchupEntryFile.FullFilePath(), lines);
         }
 
-
-        /// <summary>
-        /// Saves a new tournament file for each TournamentModel
-        /// </summary>
-        /// <param name="models">List of TournamentModel</param>
         public static void SaveToTournamentFile(this List<TournamentModel> models, string fileName)
         {
             List<string> lines = new List<string>();
 
             foreach (TournamentModel tm in models)
             {
-                lines.Add($"{tm.Id},{tm.TournamentName},{tm.EntryFee},{ConvertTeamListToString(tm.EnteredTeams)},{ConvertPrizeListToString(tm.Prizes)},{ConvertRoundListToString(tm.Rounds)}");
+                lines.Add($"{ tm.Id },{ tm.TournamentName },{ tm.EntryFee },{ ConvertTeamListToString(tm.EnteredTeams) },{ ConvertPrizeListToString(tm.Prizes) },{ ConvertRoundListToString(tm.Rounds) }");
             }
 
             File.WriteAllLines(fileName.FullFilePath(), lines);
         }
 
-        /// <summary>
-        /// Converts List of List of MatchupModel to string with each List seperated by '|'
-        /// and each List of MatchupModel seperated by '^'.
-        /// </summary>
-        /// <param name="rounds">List of List of MatchupModel</param>
-        /// <returns></returns>
-        public static string ConvertRoundListToString(List<List<MatchupModel>> rounds)
+        private static string ConvertRoundListToString(List<List<MatchupModel>> rounds)
         {
-            //starts empty output string
+            // (Rounds - id^id^id|id^id^id|id^id^id)
             string output = "";
 
             if (rounds.Count == 0)
@@ -490,26 +438,18 @@ namespace TrackerLibrary.DataAccess.TextHelpers
                 return "";
             }
 
-            //adds the Id of each List of MatchupModel to the string, and seperates each with '|'
             foreach (List<MatchupModel> r in rounds)
             {
-                output += $"{ConvertMatchupListToString(r)}|";
+                output += $"{ ConvertMatchupListToString(r) }|";
             }
 
-            //removes the last '|' from the end of the string
             output = output.Substring(0, output.Length - 1);
 
             return output;
         }
 
-        /// <summary>
-        /// Converts List of MatchupModel to string with each prize seperated by '|'
-        /// </summary>
-        /// <param name="matchups">List of MatchupModel</param>
-        /// <returns></returns>
         private static string ConvertMatchupListToString(List<MatchupModel> matchups)
         {
-            //starts empty output string
             string output = "";
 
             if (matchups.Count == 0)
@@ -517,26 +457,18 @@ namespace TrackerLibrary.DataAccess.TextHelpers
                 return "";
             }
 
-            //adds the Id of each MatchupModel to the string, and seperates each with '^'
             foreach (MatchupModel m in matchups)
             {
-                output += $"{m.Id}^";
+                output += $"{ m.Id }^";
             }
 
-            //removes the last '|' from the end of the string
             output = output.Substring(0, output.Length - 1);
 
             return output;
         }
 
-        /// <summary>
-        /// Converts List of MatchupEntryModel to string with each entry seperated by '|'
-        /// </summary>
-        /// <param name="prizes">List of PrizeModel</param>
-        /// <returns></returns>
-        public static string ConvertMatchupEntryListToString(List<MatchupEntryModel> entries)
+        private static string ConvertMatchupEntryListToString(List<MatchupEntryModel> entries)
         {
-            //starts empty output string
             string output = "";
 
             if (entries.Count == 0)
@@ -544,26 +476,18 @@ namespace TrackerLibrary.DataAccess.TextHelpers
                 return "";
             }
 
-            //adds the Id of each MatchupEntryModel to the string, and seperates each with '|'
             foreach (MatchupEntryModel e in entries)
             {
-                output += $"{e.Id}|";
+                output += $"{ e.Id }|";
             }
 
-            //removes the last '|' from the end of the string
             output = output.Substring(0, output.Length - 1);
 
             return output;
         }
 
-        /// <summary>
-        /// Converts List of PrizeModel to string with each prize seperated by '|'
-        /// </summary>
-        /// <param name="prizes">List of PrizeModel</param>
-        /// <returns></returns>
-        public static string ConvertPrizeListToString(List<PrizeModel> prizes)
+        private static string ConvertPrizeListToString(List<PrizeModel> prizes)
         {
-            //starts empty output string
             string output = "";
 
             if (prizes.Count == 0)
@@ -571,26 +495,18 @@ namespace TrackerLibrary.DataAccess.TextHelpers
                 return "";
             }
 
-            //adds the Id of each PrizeModel to the string, and seperates each with '|'
             foreach (PrizeModel p in prizes)
             {
-                output += $"{p.Id}|";
+                output += $"{ p.Id }|";
             }
 
-            //removes the last '|' from the end of the string
             output = output.Substring(0, output.Length - 1);
 
             return output;
         }
 
-        /// <summary>
-        /// Converts List of TeamModel to string with each team seperated by '|'
-        /// </summary>
-        /// <param name="teams">List of TeamModel</param>
-        /// <returns></returns>
-        public static string ConvertTeamListToString(List<TeamModel> teams)
+        private static string ConvertTeamListToString(List<TeamModel> teams)
         {
-            //starts empty output string
             string output = "";
 
             if (teams.Count == 0)
@@ -598,45 +514,33 @@ namespace TrackerLibrary.DataAccess.TextHelpers
                 return "";
             }
 
-            //adds the Id of each TeamModel to the string, and seperates each with '|'
             foreach (TeamModel t in teams)
             {
-                output += $"{t.Id}|";
+                output += $"{ t.Id }|";
             }
 
-            //removes the last '|' from the end of the string
             output = output.Substring(0, output.Length - 1);
 
             return output;
         }
 
-        /// <summary>
-        /// Converts List of PersonModel to string with each person seperated by '|'
-        /// </summary>
-        /// <param name="people">List of PersonModel</param>
-        /// <returns></returns>
         private static string ConvertPeopleListToString(List<PersonModel> people)
         {
-            //starts empty output string
             string output = "";
 
             if (people.Count == 0)
             {
                 return "";
             }
-            
-            //adds the Id of each PersonModel to the string, and seperates each with '|'
+
             foreach (PersonModel p in people)
             {
-                output += $"{p.Id}|";
+                output += $"{ p.Id }|";
             }
 
-            //removes the last '|' from the end of the string
             output = output.Substring(0, output.Length - 1);
 
             return output;
         }
-
     }
 }
-

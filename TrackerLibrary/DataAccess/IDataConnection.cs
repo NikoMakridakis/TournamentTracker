@@ -19,7 +19,6 @@ namespace TrackerLibrary.DataAccess
         /// <returns>The prize information.</returns>
         PrizeModel CreatePrize(PrizeModel model);
 
-
         /// <summary>
         /// Saves a new person to the data connection.
         /// </summary>
@@ -42,23 +41,21 @@ namespace TrackerLibrary.DataAccess
         void CreateTournament(TournamentModel model);
 
         /// <summary>
-        /// Returns all of the stored people.
-        /// </summary>
-        /// <returns></returns>
-        List<PersonModel> GetPerson_All();
-
-        /// <summary>
         /// Returns all of the stored teams.
         /// </summary>
         /// <returns></returns>
         List<TeamModel> GetTeam_All();
 
         /// <summary>
+        /// Returns all of the stored people.
+        /// </summary>
+        /// <returns></returns>
+        List<PersonModel> GetPerson_All();
+
+        /// <summary>
         /// Returns all of the stored tournaments.
         /// </summary>
         /// <returns></returns>
         List<TournamentModel> GetTournament_All();
-
-
     }
 }
