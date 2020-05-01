@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,16 +20,23 @@ namespace TrackerLibrary.Models
         /// <summary>
         /// The numeric identifier for the place (2 for second place, etc.)
         /// </summary>
+        [Display(Name = "Place Number")]
+        [Range(1, 100)]
+        [Required]
         public int PlaceNumber { get; set; }
 
         /// <summary>
         /// The friendly name for the place (second place, first runner up, etc.)
         /// </summary>
+        [Display(Name = "Place Name")]
+        [StringLength(100, MinimumLength =3)]
+        [Required]
         public string PlaceName { get; set; }
 
         /// <summary>
         /// The fixed amount this place earns or zero if it is not used.
         /// </summary>
+        [Display(Name = "Prize Amount")]
         public decimal PrizeAmount { get; set; }
 
         /// <summary>
@@ -36,6 +44,7 @@ namespace TrackerLibrary.Models
         /// zero if it is not used. The percentage is a fraction of 1 (so 0.5 for
         /// 50%).
         /// </summary>
+        [Display(Name = "Prize Percentage")]
         public double PrizePercentage { get; set; }
 
         public PrizeModel()
