@@ -34,11 +34,12 @@
             </ul>
         </div>
         <div class="col-md-9">
-            <ul>
+            <div class="row">
                 @foreach (var item in Model.Matchups)
                 {
-                    using (Html.BeginForm())
-                    {
+                    <div class="col-md-6">
+                        @using (Html.BeginForm())
+                        {
                         @Html.AntiForgeryToken()
 
                         <div class="form-horizontal">
@@ -64,10 +65,12 @@
                                     <input type="submit" value="Score Match" class="btn btn-default" />
                                 </div>
                             </div>
+                            <hr />
                         </div>
-                    }
+                        }
+                    </div>
                 }
-            </ul>
+            </div>
         </div>
     </div>
 </div>
