@@ -49,7 +49,6 @@ namespace MVCUI.Controllers
                 {
                     return RedirectToAction("Create");
                 }
-                
             }
             catch
             {
