@@ -9,13 +9,14 @@
 <div>
     <hr />
     <div class="row">
-        <div class="col-md-2">
+        <div class="col-md-3">
             <h2>@Html.DisplayNameFor(model => model.Rounds)</h2>
             <ul class="list-unstyled tourney-display">
                 @foreach (var item in Model.Rounds)
                 {
                     <li>
-                        @Html.ActionLink(item.RoundName, "Details", "Tournaments", new { id = item.RoundNumber }, new { })
+                        @Html.ActionLink(item.RoundName, "Details", "Tournaments", new { roundId = item.RoundNumber }, new { })
+                        &nbsp;
                         @if (item.Status == RoundStatus.Complete)
                         {
                             <span class="badge badge-default">completed</span>
@@ -32,8 +33,41 @@
                 }
             </ul>
         </div>
-        <div class="col-md-10">
+        <div class="col-md-9">
+            <ul>
+                @foreach (var item in Model.Matchups)
+                {
+                    using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
 
+                        <div class="form-horizontal">
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            <div class="form-group">
+                                <label class="control-label">@item.FirstTeamName</label>
+                                <div class="">
+                                    @Html.EditorFor(model => item.FirstTeamScore, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => item.FirstTeamScore, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label">@item.SecondTeamName</label>
+                                <div class="">
+                                    @Html.EditorFor(model => item.SecondTeamScore, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => item.SecondTeamScore, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-10">
+                                    <input type="submit" value="Score Match" class="btn btn-default" />
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </ul>
         </div>
     </div>
 </div>

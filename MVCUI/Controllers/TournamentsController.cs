@@ -17,7 +17,7 @@ namespace MVCUI.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public ActionResult Details(int id)
+        public ActionResult Details(int id, int roundId = 0)
         {
             List<TournamentModel> tournaments = GlobalConfig.Connection.GetTournament_All();
             try
@@ -29,6 +29,7 @@ namespace MVCUI.Controllers
 
                 var orderedRounds = t.Rounds.OrderBy(x => x.First().MatchupRound).ToList();
                 bool activeFound = false;
+
 
                 for (int i = 0; i < orderedRounds.Count; i++)
                 {
@@ -44,11 +45,17 @@ namespace MVCUI.Controllers
                         {
                             status = RoundStatus.Active;
                             activeFound = true;
+                            if (roundId == 0)
+                            {
+                                roundId = i + 1;
+                            }
                         }
                     }
 
                     input.Rounds.Add(new RoundMVCModel { RoundName = "Round " + (i + 1), Status = status, RoundNumber = i + 1 });
                 }
+
+                input.Matchups = GetMatchups(orderedRounds[roundId - 1]);
 
                 return View(input);
             }
@@ -56,6 +63,55 @@ namespace MVCUI.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
+        }
+
+        private List<MatchupMVCModel> GetMatchups(List<MatchupModel> input)
+        {
+            List<MatchupMVCModel> output = new List<MatchupMVCModel>();
+
+            foreach (var item in input)
+            {
+                int teamTwoId = 0;
+                string teamOneName = "";
+                string teamTwoName = "Bye";
+                double teamTwoScore = 0;
+
+                if (item.Entries[0].TeamCompeting == null)
+                {
+                    teamOneName = "To Be Determined";
+                }
+                else
+                {
+                    teamOneName = item.Entries[0].TeamCompeting.TeamName;
+                }
+
+                if (item.Entries.Count > 1)
+                {
+                    teamTwoId = item.Entries[1].Id;
+                    if (item.Entries[1].TeamCompeting == null)
+                    {
+                        teamTwoName = "To Be Determined";
+                    }
+                    else
+                    {
+                        teamTwoName = item.Entries[1].TeamCompeting.TeamName;
+                    }
+                    teamTwoScore = item.Entries[1].Score;
+                }
+
+                output.Add(new MatchupMVCModel
+                {
+                    MatchupId = item.Id,
+                    FirstTeamMatchupEntryId = item.Entries[0].Id,
+                    FirstTeamName = teamOneName,
+                    FirstTeamScore = item.Entries[0].Score,
+                    SecondTeamMatchupEntryId = teamTwoId,
+                    SecondTeamName = teamTwoName,
+                    SecondTeamScore = teamTwoScore
+                });
+            }
+
+            return output;
         }
 
         // GET: Tournaments/Create
