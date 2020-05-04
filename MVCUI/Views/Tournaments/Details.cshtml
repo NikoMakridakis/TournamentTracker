@@ -8,7 +8,20 @@
 
 <div>
     <hr />
+    <div class="row">
+        <div class="col-md-2">
+            <h2>@Html.DisplayNameFor(model => model.Rounds)</h2>
+            <ul class="list-unstyled tourney-display">
+                @foreach (var item in Model.Rounds)
+                {
+                    <li>@Html.ActionLink(item.RoundName, "Details", "Tournaments", new { id = item.RoundNumber }, new { })</li>
+                }
+            </ul>
+        </div>
+        <div class="col-md-10">
 
+        </div>
+    </div>
 </div>
 <p>
     @Html.ActionLink("Back to List", "Index")

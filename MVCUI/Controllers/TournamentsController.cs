@@ -27,6 +27,29 @@ namespace MVCUI.Controllers
 
                 input.TournamentName = t.TournamentName;
 
+                var orderedRounds = t.Rounds.OrderBy(x => x.First().MatchupRound).ToList();
+                bool activeFound = false;
+
+                for (int i = 0; i < orderedRounds.Count; i++)
+                {
+                    RoundStatus status = RoundStatus.Locked;
+
+                    if (!activeFound)
+                    {
+                        if (orderedRounds[i].TrueForAll(x => x.Winner != null))
+                        {
+                            status = RoundStatus.Complete;
+                        }
+                        else
+                        {
+                            status = RoundStatus.Active;
+                            activeFound = true;
+                        }
+                    }
+
+                    input.Rounds.Add(new RoundMVCModel { RoundName = "Round " + (i + 1), Status = status, RoundNumber = i + 1 });
+                }
+
                 return View(input);
             }
             catch
@@ -77,7 +100,7 @@ namespace MVCUI.Controllers
                     return RedirectToAction("Create");
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return View();
             }
