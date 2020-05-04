@@ -17,6 +17,31 @@ namespace MVCUI.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditTournamentMatchup(MatchupMVCModel model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    List<TournamentModel> tournaments = GlobalConfig.Connection.GetTournament_All();
+                    TournamentModel t = tournaments.Where(x => x.Id == model.TournamentId).First();
+
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    return View();
+                }
+            }
+            catch
+            {
+                //TODO - Do something here
+                return View();
+            }
+        }
+
         public ActionResult Details(int id, int roundId = 0)
         {
             List<TournamentModel> tournaments = GlobalConfig.Connection.GetTournament_All();
@@ -55,7 +80,7 @@ namespace MVCUI.Controllers
                     input.Rounds.Add(new RoundMVCModel { RoundName = "Round " + (i + 1), Status = status, RoundNumber = i + 1 });
                 }
 
-                input.Matchups = GetMatchups(orderedRounds[roundId - 1]);
+                input.Matchups = GetMatchups(orderedRounds[roundId - 1], id, roundId);
 
                 return View(input);
             }
@@ -65,7 +90,7 @@ namespace MVCUI.Controllers
             }
         }
 
-        private List<MatchupMVCModel> GetMatchups(List<MatchupModel> input)
+        private List<MatchupMVCModel> GetMatchups(List<MatchupModel> input, int tournamentId, int roundId = 0)
         {
             List<MatchupMVCModel> output = new List<MatchupMVCModel>();
 
@@ -102,6 +127,8 @@ namespace MVCUI.Controllers
                 output.Add(new MatchupMVCModel
                 {
                     MatchupId = item.Id,
+                    TournamentId = tournamentId,
+                    RoundNumber = roundId,
                     FirstTeamMatchupEntryId = item.Entries[0].Id,
                     FirstTeamName = teamOneName,
                     FirstTeamScore = item.Entries[0].Score,
