@@ -1,0 +1,38 @@
+﻿@model IEnumerable<TrackerLibrary.Models.TournamentModel>
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="jumbotron">
+            <h1>Tournament Tracker</h1>
+            <p class="lead">Track your tournaments easily.</p>
+            <p>@Html.ActionLink("Create a Tournament", "Create", "Tournaments", new { area = "" }, new { @class = "btn btn-primary btn-lg" })</p>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Play with friends!</h2>
+                <p>
+                    Make a team and get started today in a new tournament.
+                </p>
+            </div>
+            <div class="col-md-6">
+                <h2>Win prizes!</h2>
+                <p>Set up a tournament with prizes for first and second place and compete to win.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <h2>Current Tournaments</h2>
+        <ul class="list-unstyled tourney-display">
+            @foreach (var item in Model)
+            {
+                <li>@Html.ActionLink(item.TournamentName, "Details", "Tournaments", new { id = item.Id }, new { })</li>
+            }
+        </ul>
+    </div>
+</div>

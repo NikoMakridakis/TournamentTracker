@@ -1,0 +1,50 @@
+﻿@model MVCUI.Models.TournamentMVCDetailsModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Tournament: @Html.DisplayFor(model => model.TournamentName)</h2>
+
+<div>
+    <hr />
+    <div class="row">
+        <div class="col-md-3">
+            <h2>@Html.DisplayNameFor(model => model.Rounds)</h2>
+            <ul class="list-unstyled tourney-display">
+                @foreach (var item in Model.Rounds)
+                {
+                    <li>
+                        @Html.ActionLink(item.RoundName, "Details", "Tournaments", new { roundId = item.RoundNumber }, new { })
+                        &nbsp;
+                        @if (item.Status == RoundStatus.Complete)
+                        {
+                            <span class="badge badge-default">completed</span>
+                        }
+                        else if (item.Status == RoundStatus.Active)
+                        {
+                            <span class="badge badge-success">active</span>
+                        }
+                        else if (item.Status == RoundStatus.Locked)
+                        {
+                            <span class="badge badge-danger">locked</span>
+                        }
+                    </li>
+                }
+            </ul>
+        </div>
+        <div class="col-md-9">
+            <div class="row">
+                @foreach (var item in Model.Matchups)
+                {
+                    <div class="col-md-6">
+                        @Html.Partial("_EditMatchup", item)
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<p>
+    @Html.ActionLink("Back to List", "Index")
+</p>
