@@ -21,11 +21,18 @@ namespace TrackerLibrary
             //The accountSid and authToken are from the created Twilio account online.
             TwilioClient.Init(accountSid, authToken);
 
+            try
+            {
             var message = MessageResource.Create(
                 to: new PhoneNumber(to),
                 from: new PhoneNumber(fromPhoneNumber),
                 body: textMessage
                 );
+            }
+            catch
+            {
+
+            }
         }
     }
 }

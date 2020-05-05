@@ -35,7 +35,7 @@ namespace TrackerLibrary
             {
                 foreach (MatchupModel rm in round)
                 {
-                    if (rm.Winner == null && (rm.Entries.Any(x => x.Score != 0) || rm.Entries.Count == 1))
+                    if ((rm.Entries.Any(x => x.Score != 0) || rm.Entries.Count == 1))
                     {
                         toScore.Add(rm);
                     }
@@ -108,7 +108,14 @@ namespace TrackerLibrary
 
             if (p.CellphoneNumber.Length > 0)
             {
-                SMSLogic.SendSMSMessage(p.CellphoneNumber, $"You have a new matchup with { competitor.TeamCompeting.TeamName }"); 
+                if (competitor != null)
+                {
+                    SMSLogic.SendSMSMessage(p.CellphoneNumber, $"You have a new matchup with { competitor.TeamCompeting.TeamName }");
+                }
+                else
+                {
+                    SMSLogic.SendSMSMessage(p.CellphoneNumber, "You have a bye week for the first round.");
+                }
             }
         }
 

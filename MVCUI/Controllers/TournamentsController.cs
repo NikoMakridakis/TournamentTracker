@@ -27,19 +27,40 @@ namespace MVCUI.Controllers
                 {
                     List<TournamentModel> tournaments = GlobalConfig.Connection.GetTournament_All();
                     TournamentModel t = tournaments.Where(x => x.Id == model.TournamentId).First();
+                    MatchupModel foundMatchup = new MatchupModel();
 
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                    return View();
+                    foreach (var round in t.Rounds)
+                    {
+                        foreach (var matchup in round)
+                        {
+                            if (matchup.Id == model.MatchupId)
+                            {
+                                foundMatchup = matchup;
+                            }
+                        }
+                    }
+
+                    for (int i = 0; i < foundMatchup.Entries.Count; i++)
+                    {
+                        if (i == 0)
+                        {
+                            foundMatchup.Entries[i].Score = model.FirstTeamScore;
+                        }
+                        else if (i == 1)
+                        {
+                            foundMatchup.Entries[i].Score = model.SecondTeamScore;
+                        }
+                    }
+
+                    TournamentLogic.UpdateTournamentResults(t);
                 }
             }
             catch
             {
-                //TODO - Do something here
-                return View();
+                
             }
+
+            return RedirectToAction("Details", "Tournaments", new { id = model.TournamentId, roundId = model.RoundNumber });
         }
 
         public ActionResult Details(int id, int roundId = 0)
@@ -163,11 +184,14 @@ namespace MVCUI.Controllers
             {
                 if (ModelState.IsValid && model.SelectedEnteredTeams.Count > 0)
                 {
+                    List<PrizeModel> allPrizes = GlobalConfig.Connection.GetPrizes_All();
+                    List<TeamModel> allTeams = GlobalConfig.Connection.GetTeam_All();
+
                     TournamentModel t = new TournamentModel();
                     t.TournamentName = model.TournamentName;
                     t.EntryFee = model.EntryFee;
-                    t.EnteredTeams = model.SelectedEnteredTeams.Select(x => new TeamModel { Id = int.Parse(x) }).ToList();
-                    t.Prizes = model.SelectedPrizes.Select(x => new PrizeModel { Id = int.Parse(x) }).ToList();
+                    t.EnteredTeams = model.SelectedEnteredTeams.Select(x => allTeams.Where(y => y.Id == int.Parse(x)).First()).ToList();
+                    t.Prizes = model.SelectedPrizes.Select(x => allPrizes.Where(y => y.Id == int.Parse(x)).First()).ToList();
 
                     //Wire our matchups
                     TournamentLogic.CreateRounds(t);
